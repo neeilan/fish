@@ -1,0 +1,126 @@
+<%- include ./header -%>
+
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addGroupModal">Create Group</button>
+        <!-- Modal -->
+        <div id="addGroupModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+        
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Create group</h4>
+              </div>
+              <div class="modal-body">
+                <form id="form-fishgroup" action="/newgroup/" method="post" class="form-horizontal">
+                    <div class = "row">
+                    <div class="form-group txt-center">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <input name="name" placeholder="Group name"  class="form-control">
+                        </div>
+                    </div>
+                    </div>
+                    <br/>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </form>
+              </div>
+            </div>
+        
+          </div>
+        </div>
+
+
+
+<table id="" data-search="true" class="table table-striped sortable" data-sort-order="desc">
+    
+    
+    <thead>
+        <tr>
+            <th class="text-center order" data-sortable="true" data-field="order">Group name</th>
+            <th class="text-center order"  data-sortable="true">Group size</th>
+            <th class="text-center order" data-sortable="true" data-field="order"></th>
+        </tr>
+    </thead>
+    
+    
+   <% if (groups && groups.length > 0) { %>
+
+    <tbody>
+            
+    <% groups.forEach(function (group) { %>
+    
+        <tr>
+            <td class="text-center"><%= group.name %></td>
+            <td class="text-center"><%= group.fish.length || "0" %></td>
+            <td class="text-center">
+                <a data-toggle="modal" data-target="#<%= group.id %>">View fish</a>
+            </td>
+            <td class="text-center">
+                <a class = "deleteGroupBtn btn btn-danger" id="<%=group.id %>">Delete group</a>
+            </td>
+        </tr>
+        
+    <% }) %>
+
+    </tbody>
+    
+    
+    <% groups.forEach(function (group) { %>
+    
+        <div id="<%=group.id%>" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content row text-center" style="padding:10px">
+                    <h4>Group: <%=group.name%></h4>
+                    <hr/>
+
+                    <% group.fish.forEach(function (fish) { %>
+                    <div class="col-xs-10 col-xs-offset-1">
+                        <a class="pull-left" href="/fish/<%=fish._id%>"><%= fish.lovejoy_lab_number || "" %></a>&nbsp;<a id="<%=group.id%>|<%=fish.id%>" class = "removeFishBtn btn btn-danger pull-right">Remove</a><br/><br/>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+        
+    <% }) %>    
+        
+    <% } else { %>
+    
+        <tbody>
+            <tr><td colspan="3">You do not currently have any groups.</td></tr>
+        </tbody>
+        
+    <% } %>
+    
+    
+    </tr>
+
+    
+    
+</table>
+
+<%- include ./footer -%>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.min.js"></script>
+
+<script>
+    var refresh = function(){
+        window.location.href = window.location.href;
+    };
+    
+    $(document).ready(function(){
+        $(document).on('click', '.removeFishBtn', function(e){
+            var ids = e.target.id.split('|');
+            $.post('/removeFishFromGroup/' + ids[1], { group : ids[0] }, refresh);
+        })
+        
+        $(document).on('click', '.deleteGroupBtn', function(e){
+            var id = e.target.id;
+            $.post('/deletefishgroup/'+ id, refresh);
+        })
+        // var $table = $('#filesTable').bootstrapTable();
+    })
+</script>
+

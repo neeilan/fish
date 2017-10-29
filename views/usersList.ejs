@@ -1,0 +1,114 @@
+<%- include ./header -%>
+
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addUserModal">New User</button>
+        <div id="addUserModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+        
+             Modal content
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add User</h4>
+              </div>
+              <div class="modal-body">
+                <form id="" action="/newuser/" method="post" class="form-horizontal">
+                    <div class = "row">
+                    <div class="form-group txt-center">
+                        <div class="col-xs-8 col-xs-offset-2">
+                            <input name="firstName" placeholder="First name"  class="form-control">
+                        </div>
+                        <br/> <br/>
+                        <div class="col-xs-8 col-xs-offset-2">
+                            <input name="lastName" placeholder="Last name"  class="form-control">
+                        </div>
+                        <br/> <br/>
+                        <div class="col-xs-8 col-xs-offset-2">
+                            <input name="email" placeholder="Email"  class="form-control">
+                        </div>  
+                        <br/> <br/>
+                        <div class="col-xs-8 col-xs-offset-2">
+                            <input name="password" type="password" placeholder="Password"  class="form-control">
+                        </div>                          
+                    </div>
+                    </div>
+                    <br/>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </form>
+              </div>
+            </div>
+        
+          </div>
+        </div>
+
+
+
+<table id="" data-search="true" class="table table-striped sortable" data-sort-order="desc">
+    
+    
+    <thead>
+        <tr>
+            <th class="text-center" data-sortable="true">Name</th>
+            <th class="text-center"  data-sortable="true">Login</th>
+            <th class="text-center" data-sortable="true">Role</th>
+        </tr>
+    </thead>
+    
+       <% if (users && users.length > 0) { %>
+
+    <tbody>
+            
+    <% users.forEach(function (user) { %>
+        <tr>
+            <td class="text-center"><%= (user.name.first ? user.name.first : '') + ' ' + (user.name.last ? user.name.last : '') %></td>
+            <td class="text-center"><%= user.email %></td>
+            <td class="text-center"><%= user.role %></td>
+            
+            <% if (isAdmin && user.role != 'admin') { %>
+                <td class="text-center">
+                    <a class = "deleteUserBtn btn btn-danger" id="<%=user.id %>">Delete user</a>
+                </td>
+            <% } %>
+            
+        </tr>
+        
+    
+    <% }) %>
+
+    </tbody>
+        
+    <% } else { %>
+    
+        <tbody>
+            <tr><td colspan="3">You do not currently have any users.</td></tr>
+        </tbody>
+        
+    <% } %>
+    
+
+    
+    </tr>
+
+    
+    
+</table>
+
+<%- include ./footer -%>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.min.js"></script>
+
+<script>
+    var refresh = function(){
+        window.location.href = window.location.href;
+    };
+    
+    $(document).ready(function(){
+
+        $(document).on('click', '.deleteUserBtn', function(e){
+            var id = e.target.id;
+            $.post('/deleteuser/'+ id, refresh);
+        })
+    })
+</script>
+

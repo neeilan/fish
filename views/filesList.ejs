@@ -1,0 +1,59 @@
+<%- include ./header -%>
+
+<hr/>
+
+
+<table id="filesTable" data-search="true" class="table table-striped sortable" data-sort-order="desc">
+    
+    
+    <thead>
+        <tr>
+            <th class="text-center order" data-sortable="true" data-field="order">File name</th>
+            <th class="text-center order"  data-sortable="true">File type</th>
+            <th class="text-center order" data-sortable="true" data-field="order">Associated fish</th>
+        </tr>
+    </thead>
+    
+    
+   <% if (filesList && filesList.length > 0) { %>
+
+    <tbody>
+            
+    <% filesList.forEach(function (file) { %>
+    
+        <tr>
+            <td class="text-center"><a href="/files/<%=file.fish.id%>/<%=file.name%>"><%= file.name || "" %></a></td>
+            <td class="text-center"><%= file.type || "" %></td>
+            <td class="text-center"><a href="/fish/<%=file.fish.id%>"><%= file.fish.lovejoy_lab_number || "" %></a></td>
+        </tr>
+        
+    <% }) %>
+    
+    </tbody>
+        
+    <% } else { %>
+    
+        <tbody>
+            <tr><td colspan="3">No files are currently available.</td></tr>
+        </tbody>
+        
+    <% } %>
+    
+    
+    </tr>
+
+    
+    
+</table>
+
+<%- include ./footer -%>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        // var $table = $('#filesTable').bootstrapTable();
+    })
+</script>
+

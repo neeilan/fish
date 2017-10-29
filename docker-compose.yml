@@ -1,0 +1,16 @@
+version: "2"
+services:
+  mongo:
+    image: mongo
+    volumes:
+      - /Users/neeilanselvalingam/Desktop/docker/src/data:/data/db
+    ports:
+      - "27017:27017"
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    links:
+      - mongo

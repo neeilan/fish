@@ -1,0 +1,240 @@
+<%- include ./header -%>
+
+
+
+<div class="row text-center">
+    
+    <% if (search && searchSummary)  { %>
+    <div class = "alert alert-info">
+        Search results for <b><%=searchSummary%></b>. (<%=count%> results). <a href = "/fishlist">Click here to return to full fish list</a>
+    </div>
+    <% } else { %>
+    
+
+    <form id="simple-query-form" class="form-inline">
+
+        <select name="field1" class="col-xs-2 form-control">
+          <option value="lovejoy_lab_number">Lovejoy Lab #</option>
+          <option>Order</option>
+          <option>Family</option>
+          <option>Genus</option>
+          <option>Species</option>
+          <option>Subspecies</option>
+          <option>Individual</option>
+          <option>Country</option>
+        </select>
+        <input name="value1" class="col-xs-2 form-control" id="searchTerm1" placeholder="Exact or partial match" type="text">
+        
+        <select name="queryType" class="col-xs-2 form-control">
+          <option>AND</option>
+          <option selected>OR</option>
+        </select>
+
+        
+        <select name="field2" class="col-xs-2 form-control">
+          <option value="Order2">Order</option>
+          <option selected value="Family2">Family</option>
+          <option value="Genus2">Genus</option>
+          <option value="Species2">Species</option>
+          <option value="Subspecies2">Subspecies</option>
+          <option value="Individual2">Individual</option>
+          <option value="Country2">Country</option>
+        </select>
+        <input name="value2" class="col-xs-2 form-control" id="searchTerm1" placeholder="Exact match only" type="text">
+        &nbsp;<button id="simple-query-submit" type="submit" class="btn btn-primary">Search</button>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addFishModal">Add fish</button>
+        <a class="btn btn-default" id="showColumnOptions">Column options</a>
+
+    </form>
+    
+    <% } %>
+</div>
+
+<!-- Trigger the modal with a button -->
+
+
+<!-- Modal -->
+<div id="addFishModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add fish</h4>
+      </div>
+      <div class="modal-body">
+        <form id="form-fish" action="/newfish/" method="post" class="form-horizontal">
+            <div class = "row">
+            <div class="form-group txt-center">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <input name="llnumber" placeholder="Lovejoy Lab Fishlist #"  class="form-control">
+                </div>
+            </div>
+            </div>
+            <br/>
+            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id = "columnOptions" style="display:none; padding: 10px;">
+    <label class="checkbox-inline columnToggle"><input id="showorder" type="checkbox" checked>Order</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showfamily" type="checkbox" checked>Family</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showgenus" type="checkbox" checked>Genus</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showspecies" type="checkbox" checked>Species</label><br/>
+    
+    <label class="checkbox-inline columnToggle"><input id="showsubspecies" type="checkbox" checked>Subspecies</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showinitialtubelabel" type="checkbox" checked>Initial Tube Label</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showindividual" type="checkbox" checked>Individual</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showdnaprepnumber" type="checkbox" checked>DNA Prep #</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showmuseumvouchercatnumber" type="checkbox" checked>Museum Voucher Cat #</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showcramptoneodnumber" type="checkbox" checked>Crampton EOD #</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showcountry" type="checkbox" checked>Country</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showlocality" type="checkbox" checked>Locality</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showlatitude" type="checkbox" checked>Latitude</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showlongitude" type="checkbox" checked>Longitude</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showdatecollected" type="checkbox" checked>Date Collected</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="shownotes" type="checkbox" checked>Notes</label><br/>
+    <label class="checkbox-inline columnToggle"><input id="showaddedby" type="checkbox" checked>Added by</label><br/>
+</div>
+<table id="fishTable" data="<%fishList%>" data-search="true" class="table table-striped sortable" data-toggle="table" data-sort-order="desc">
+    <thead>
+        <tr>
+            <th class="text-center"  data-sortable="true">LL Fishlist #</th>
+            <th class="text-center order" data-sortable="true" data-field="order">Order</th>
+            <th class="text-center family" data-sortable="true"  data-field="family">Family</th>
+            <th class="text-center genus" data-sortable="true" data-field="genus">Genus</th>
+            <th class="text-center species" data-sortable="true"  data-field="species">Species</th>
+            <th class="text-center subspecies" data-sortable="true"  data-field="subspecies">Subspecies</th>
+            <th class="text-center initialTubeLabel" data-sortable="true"  data-field="initialtubelabel">Initial Tube Label</th>
+            <th class="text-center individual" data-sortable="true"  data-field="individual">Individual</th>
+            <th class="text-center dnaprepnumber" data-sortable="true"  data-field="dnaprepnumber">DNA Prep #</th>
+            <th class="text-center museumvouchercatnumber" data-sortable="true"  data-field="museumvouchercatnumber">Museum Voucher Cat #</th>
+            <th class="text-center cramptoneodnumber" data-sortable="true"  data-field="cramptoneodnumber">Crampton EOD #</th>
+            <th class="text-center country" data-sortable="true"  data-field="country">Country</th>
+            <th class="text-center locality" data-sortable="true"  data-field="locality">Locality</th>
+            <th class="text-center latitude" data-sortable="true"  data-field="latitude">Latitude</th>
+            <th class="text-center longitude" data-sortable="true"  data-field="longitude">Longitude</th>
+            <th class="text-center datecollected" data-sortable="true"  data-field="datecollected">Date Collected</th>
+            <th class="text-center notes" data-sortable="true"  data-field="notes">Notes</th>
+            <th class="text-center addedby" data-sortable="true"  data-field="addedby">Added by</th>
+        </tr>
+    </thead>
+    <% if (fishList && fishList.length > 0) { %>
+    
+        <tbody>
+            
+        <% fishList.forEach(function (fish) { %>
+        
+            <tr>
+                <td class="text-center llnum" id="<%=fish._id%>"><a href="/fish/<%=fish._id%>"><%= fish.lovejoy_lab_number || "" %></a></td>
+                <td class="text-center order"><%= fish.order || "" %></td>
+                <td class="text-center family"><%= fish.family || "" %></td>
+                <td class="text-center genus"><%= fish.genus || "" %></td>
+                <td class="text-center species"><%= fish.species || "" %></td>
+                <td class="text-center subspecies"><%= fish.subspecies || "" %></td>
+                <td class="text-center initialTubeLabel"><%= fish.initial_tube_label || "" %></td>
+                <td class="text-center individual"><%= fish.individual || "" %></td>
+                <td class="text-center dnaprepnumber"><%= fish.dna_prep_number || "" %></td>
+                <td class="text-center museumvouchercatnumber"><%= fish.museum_voucher_cat_number || "" %></td>
+                <td class="text-center cramptoneodnumber"><%= fish.crampton_eod_number || "" %></td>
+                <td class="text-center country"><%= fish.country || "" %></td>
+                <td class="text-center locality"><%= fish.locality || "" %></td>
+                <td class="text-center latitude"><%= fish.latitude || ""  %></td>
+                <td class="text-center longitude"><%= fish.longitude || "" %></td>
+                <td class="text-center date_collected"><%= fish.date_collected || "" %></td>
+                <td class="text-center notes"><%= fish.notes || "" %></td>
+                <td class="text-center added_by"><%= fish.added_by || "" %></td>
+            </tr>
+            
+        <% }) %>
+        
+        </tbody>
+        
+    <% } else { %>
+    
+        <tbody>
+            <tr><td colspan="3">No data is currently available.</td></tr>
+        </tbody>
+        
+    <% } %>
+    
+</table>
+<br/>
+<div class="btn-group">
+    <% for (var i = 1; i <= pages; i++) { %>
+        <% if (Math.abs(currPage - i) < 5 || i == 1 || i == pages) { %>
+            <a id="<%=i%>" class="btn btn-default pageNum <%= currPage == i ? "btn-primary" : ""  %>"><%=i%></a>
+        <% } %>
+    <% } %>
+</div>
+<br/>
+<%- include ./footer -%>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.0/bootstrap-table.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+
+        var $table = $('#fishTable').bootstrapTable();
+        var selectedFish = [];
+        
+        
+        $('.columnToggle').click(function(e) {
+            var colName = e.target.id.substring(4);
+            if($(e.target).is(':checked')){
+                $table.bootstrapTable('showColumn',colName);
+                $(this).prop('checked', true);
+            }
+            else{
+                $table.bootstrapTable('hideColumn',colName);
+                $(this).prop('checked', false);
+            }
+        })
+        
+        $('#simple-query-submit').click(function(e){
+            e.preventDefault();
+            console.log($('#simple-query-form').serialize());
+            
+            var url = '/fishlist?'+$('#simple-query-form').serialize();
+            window.location.replace(url);
+        })
+        
+        $(".pageNum").click(function(e){
+            var href = window.location.href;
+            if (href.indexOf('?') > -1){
+                if (href.indexOf('page') > -1){
+                    href = href.replace(/\page=\d+/g, 'page=' + e.target.id);
+                }
+                else {
+                    href += '&page=' + e.target.id;
+                }
+            }
+            else{
+                href +='?page=' + e.target.id; 
+            }
+            window.location.href = href;
+        })
+        
+        $("#showColumnOptions").click(function(){
+            $("#columnOptions").toggle();
+        })
+                
+        $('.table > tbody > tr > .llnum').click(function(e) {
+            $(e.target).css('background', '#FFFFE0');
+            var id = e.target.id;
+            if (selectedFish.indexOf(id) === -1)
+                selectedFish.push(id);
+        });       
+        
+        
+        
+    })
+</script>
+
